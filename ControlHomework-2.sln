@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVWorker", "CSVWorker\CSVWorker.csproj", "{A5430701-ADFC-4514-8A0B-1AB3055960A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib", "Lib\Lib.csproj", "{04315D12-E0EA-4262-A1B2-6D0A634DBF32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5430701-ADFC-4514-8A0B-1AB3055960A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5430701-ADFC-4514-8A0B-1AB3055960A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5430701-ADFC-4514-8A0B-1AB3055960A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5430701-ADFC-4514-8A0B-1AB3055960A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
