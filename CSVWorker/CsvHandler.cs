@@ -19,9 +19,13 @@ internal static class CsvHandler
 
         try
         {
-            string[] csvData = CsvProcessing.Read(userPathInput);
+            string[] lines = CsvProcessing.Read(userPathInput);
+
+            int columns = Lib.Constants.ColumnCount;
+            const char sep = Lib.Constants.FieldsSeparator;
+            string[] fields = CsvParser.LinesToFields(lines, columns, sep);
             
-            DataPanel panel = new(csvData);
+            DataPanel panel = new(fields);
             panel.Run();
         }
         catch (Exception ex)

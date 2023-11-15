@@ -16,7 +16,7 @@ public class MenuItem
 
     public void Write()
     {
-        ConsoleMethod.NicePrint(" " + Name, 
+        ConsoleMethod.NicePrint(" " + Name + ";", 
             Selected ? CustomColor.Primary : CustomColor.Secondary, "");
     }
 }

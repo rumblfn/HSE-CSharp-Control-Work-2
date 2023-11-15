@@ -16,19 +16,95 @@ public class CsvParser
     private bool _multiline;
     private string _pendingField = "";
 
-    public CsvParser(string path, char sep)
+    public CsvParser(string path, char sep = Constants.FieldsSeparator)
     {
         _fPath = path;
         _separator = sep;
         _pendingFieldLine = Array.Empty<string>();
     }
 
-    private void ConcatArrays(params string[][] arrays)
+    private static void ConcatArrays(ref string[] baseArr, params string[][] arrays)
     {
-        for (int i = 1; i < arrays.Length; i++)
+        baseArr = arrays
+            .Aggregate(baseArr, (current, arr) => current.Concat(arr).ToArray());
+    }
+
+    public static string[] ParseCorrectCsvRecord(string line, char sep)
+    {
+        string[] result = Array.Empty<string>();
+        bool quoted = false;
+        bool withQuotes = false;
+
+        StringBuilder field = new ();
+
+        foreach (char ch in line)
         {
-            arrays[0] = arrays[0].Concat(arrays[i]).ToArray();
+            if (ch == Quote && withQuotes)
+            {
+                if (field.Length > 0)
+                {
+                    field.Append(ch);
+                    withQuotes = false;
+                }
+            }
+            else
+            {
+                withQuotes = false;
+            }
+
+            if (ch == Quote)
+            {
+                quoted = !quoted;
+            }
+            else
+            {
+                if (ch == sep && !quoted)
+                {
+                    ConcatArrays(ref result, new[] { field.ToString() });
+                    field.Length = 0;
+                }
+                else
+                {
+                    field.Append(ch);
+                }
+            }
         }
+
+        if (!quoted)
+        {
+            ConcatArrays(ref result, new[] { field.ToString() });
+        }
+
+        return result;
+    }
+
+    public static string[] LinesToFields(string[] lines, int columnCount, char sep)
+    {
+        int fieldsCount = columnCount * lines.Length;
+        int fieldsIndex = 0;
+        
+        string[] fields = new string[fieldsCount];
+        foreach (string line in lines)
+        {
+            string[] record = ParseCorrectCsvRecord(line, sep);
+            foreach (string field in record)
+            {
+                fields[fieldsIndex] = field;
+                fieldsIndex++;
+            }
+        }
+
+        return fields;
+    }
+
+    public static string FieldsToLine(string[] fields, char sep)
+    {
+        for (int i = 0; i < fields.Length; i++)
+        {
+            fields[i] = '\"' + fields[i] + '\"';
+        }
+
+        return string.Join(sep, fields);
     }
 
     private string[] ParseLine(string line)
@@ -70,7 +146,7 @@ public class CsvParser
             {
                 if (ch == _separator && !quoted)
                 {
-                    ConcatArrays(result, new[] { field.ToString() });
+                    ConcatArrays(ref result, new[] { field.ToString() });
                     field.Length = 0;
                 }
                 else
@@ -87,13 +163,13 @@ public class CsvParser
         }
         else
         {
-            ConcatArrays(result, new[] { field.ToString() });
+            ConcatArrays(ref result, new[] { field.ToString() });
         }
 
         return result;
     }
     
-    public string[][] Parse()
+    public string[] Parse()
     {
         string[] lines = File.ReadAllLines(_fPath);
         string[][] matrix = new string[lines.Length][];
@@ -109,13 +185,14 @@ public class CsvParser
             string[] csvLineInArray = ParseLine(line);
             if (_multiline)
             {
-                ConcatArrays(_pendingFieldLine, csvLineInArray);
+                ConcatArrays(ref _pendingFieldLine, csvLineInArray);
             }
             else
             {
+                matrix[currentLineIndex] = Array.Empty<string>();
                 if (_pendingFieldLine is { Length: > 0 })
                 {
-                    ConcatArrays(matrix[currentLineIndex], _pendingFieldLine, csvLineInArray);
+                    ConcatArrays(ref matrix[currentLineIndex], _pendingFieldLine, csvLineInArray);
                     _pendingFieldLine = Array.Empty<string>();
                 }
                 else
@@ -127,6 +204,13 @@ public class CsvParser
             }
         }
             
-        return matrix[..currentLineIndex];
+        matrix = matrix[..currentLineIndex];
+
+        string[] correctLines = new string[currentLineIndex];
+        for (int i = 0; i < currentLineIndex; i++)
+        {
+            correctLines[i] = string.Join(';', matrix[i].Select(field => '"' + field + '"'));
+        }
+        return correctLines;
     }
 }

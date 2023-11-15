@@ -40,22 +40,13 @@ public abstract class CsvProcessing
         _fPath = csvFilePath;
         ValidateFilePath();
         
-        CsvParser parser = new CsvParser(csvFilePath, ';');
-        string[][] matrix = parser.Parse();
+        CsvParser parser = new CsvParser(csvFilePath);
+        string[] correctLines = parser.Parse();
 
-        Console.WriteLine(matrix.Length);
-        foreach (string[] line in matrix)
-        {
-            Console.WriteLine(line.Length + " " + string.Join(", ", line));
-        }
-
-        throw new Exception();
-
-        // // Template.
-        // CsvTemplate template = new (data);
-        // template.ValidateTemplate();
-        //
-        return matrix[0];
+        CsvTemplate template = new (correctLines);
+        template.ValidateTemplate();
+        
+        return correctLines;
     }
     /// <summary>
     /// Overwrites file with specified data by saved path <see cref="_fPath"/>.

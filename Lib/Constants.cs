@@ -20,13 +20,15 @@ public struct Constants
     // Default template headers.
     public static readonly Dictionary<string, string> Headers = new()
     {
-        {"\"Name\"", "\"ФИО почетного реставратора\""},
-        {"\"RankYear\"", "\"Год присуждения звания\""},
-        {"\"MainObjects\"", "\"Основные объекты реставрации\""},
-        {"\"Workplace\"", "\"Место работы\""},
-        {"\"Photo\"", "\"Фотография\""},
-        {"\"global_id\"", "\"global_id\""}
+        {"Name", "ФИО почетного реставратора"},
+        {"RankYear", "Год присуждения звания"},
+        {"MainObjects", "Основные объекты реставрации"},
+        {"Workplace", "Место работы"},
+        {"Photo", "Фотография"},
+        {"global_id", "global_id"},
+        {"", ""},
     };
     public static readonly int ColumnCount = Headers.Count;
-    public static readonly int HeaderRowsCount = 2;
+    public const int HeaderRowsCount = 2;
+    public const char FieldsSeparator = ';';
 }

@@ -14,19 +14,16 @@ internal class DataPanel
     private MenuItem _selectedItem = new MenuItem("Default", () => {});
     
     private string[] _data;
-    private readonly Dictionary<string, List<MenuItem>> _menuItems;
+    private readonly Dictionary<string, MenuItem[]> _menuItems;
     
     public DataPanel(string[] csvData)
     {
-        CsvTemplate template = new (csvData);
-        template.ValidateTemplate();
-        
         _data = csvData;
-        _menuItems = new ()
+        _menuItems = new Dictionary<string, MenuItem[]>
         {
             {
                 "Selecting by field values in specified column",
-                new List<MenuItem>()
+                new MenuItem[]
                 {
                     new("MainObjects", () => HandleSelecting("MainObjects")),
                     new("Workplace", () => HandleSelecting("Workplace")),
@@ -36,23 +33,49 @@ internal class DataPanel
             },
             {
                 "Sorting by field values",
-                new List<MenuItem>()
+                new MenuItem[]
                 {
-                    new("Alphabetical order by Name field", () => {}),
-                    new("RankYear descending", () => {}),
+                    new("Alphabetical order by Name field", 
+                        () => HandleSorting("Name", "Alphabetical")),
+                    new("RankYear descending", 
+                        () => HandleSorting("RankYear", "Descending")),
                 }
             },
             {
                 "File",
-                new List<MenuItem>()
+                new MenuItem[]
                 {
-                    new("Show", () => {}),
-                    new("Save", () => {}),
+                    new("Show", HandleShow),
+                    new("Save", HandleSave),
                     new("Exit", () => { _toExit = true; }),
                 }
             }
         };
         UpdateSelectedItem();
+    }
+
+    private void HandleSave()
+    {
+        int columnsCount = Lib.Constants.ColumnCount;
+        string[] lines = new string[_data.Length / columnsCount];
+        for (int i = 0; i < lines.Length; i++)
+        {
+            lines[i] = CsvParser.FieldsToLine(_data[(i * columnsCount)..((i + 1) * columnsCount)], Lib.Constants.FieldsSeparator);
+        }
+        CsvProcessing.Write(lines);
+        Console.Clear();
+        ConsoleMethod.NicePrint("Data saved.");
+        UpdateCursorPosition();
+    }
+
+    private void HandleShow()
+    {
+        DataProcessing dp = new(_data);
+        dp.Write();
+        ConsoleMethod.NicePrint("Press any key to continue.", CustomColor.ErrorColor);
+        Console.ReadKey(true);
+        Console.Clear();
+        UpdateCursorPosition();
     }
 
     private void HandleSelecting(string column)
@@ -63,14 +86,24 @@ internal class DataPanel
         _data = dp.SamplingByColumn(column, sub);
         int rowsCount = _data.Length / Lib.Constants.ColumnCount;
         rowsCount -= Lib.Constants.HeaderRowsCount;
+        Console.Clear();
         ConsoleMethod.NicePrint($"The new selection contains {rowsCount} record(s).");
+        UpdateCursorPosition();
+    }
+
+    private void HandleSorting(string column, string sortType)
+    {
+        DataProcessing dp = new(_data);
+        _data = dp.SortingByColumn(column, sortType);
+        Console.Clear();
+        ConsoleMethod.NicePrint($"{sortType} sorting by column {column} completed.");
         UpdateCursorPosition();
     }
 
     private void UpdateSelectedItem()
     {
         _selectedItem.Selected = false;
-        KeyValuePair<string, List<MenuItem>> selectedRow = _menuItems.ElementAt(_selectedRowIndex);
+        KeyValuePair<string, MenuItem[]> selectedRow = _menuItems.ElementAt(_selectedRowIndex);
         _selectedItem = selectedRow.Value[_selectedColumnIndex];
         _selectedItem.Selected = true;
     }
@@ -100,7 +133,7 @@ internal class DataPanel
                 }
                 break;
             case ConsoleKey.RightArrow:
-                if (_selectedColumnIndex < _menuItems.ElementAt(_selectedRowIndex).Value.Count - 1)
+                if (_selectedColumnIndex < _menuItems.ElementAt(_selectedRowIndex).Value.Length - 1)
                 {
                     _selectedColumnIndex++;
                 }
@@ -156,7 +189,7 @@ internal class DataPanel
         Console.SetCursorPosition(_currentColumnIndex, _currentRowIndex);
         for (int i = 0; i < _menuItems.Count; i++)
         {
-            (string? key, List<MenuItem> items) = _menuItems.ElementAt(i);
+            (string? key, MenuItem[] items) = _menuItems.ElementAt(i);
 
             if (i == _selectedRowIndex)
             {
