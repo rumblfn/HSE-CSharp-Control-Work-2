@@ -1,3 +1,4 @@
+using CSVLib;
 using Lib;
 namespace CSVWorker;
 
@@ -6,9 +7,6 @@ namespace CSVWorker;
 /// </summary>
 internal static class CsvHandler
 {
-    private const string DefaultPath = 
-        "/Users/samilvaliahmetov/Projects/ControlHomework-2/assets/recreators.csv";
-    
     /// <summary>
     /// File handler entry point.
     /// </summary>
@@ -17,21 +15,13 @@ internal static class CsvHandler
         ConsoleMethod.NicePrint(Constants.FileNameInputMessage);
         string userPathInput = Console.ReadLine() ?? "";
 
-        try
-        {
-            string[] lines = CsvProcessing.Read(userPathInput);
+        string[] lines = CsvProcessing.Read(userPathInput);
 
-            int columns = Lib.Constants.ColumnCount;
-            const char sep = Lib.Constants.FieldsSeparator;
-            string[] fields = CsvParser.LinesToFields(lines, columns, sep);
+        int columns = Lib.Constants.ColumnCount;
+        const char sep = Lib.Constants.FieldsSeparator;
+        string[] fields = CsvParser.LinesToFields(lines, columns, sep);
             
-            DataPanel panel = new(fields);
-            panel.Run();
-        }
-        catch (Exception ex)
-        {
-            ConsoleMethod.NicePrint(Lib.Constants.DefaultErrorMessage, CustomColor.ErrorColor);
-            ConsoleMethod.NicePrint(ex.Message, CustomColor.ErrorColor);
-        }
+        DataPanel panel = new(fields);
+        panel.Run();
     }
 }

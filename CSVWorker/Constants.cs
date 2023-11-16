@@ -9,7 +9,6 @@ internal struct Constants
     public const string ProgramFinishedMessage = "CSV-Worker program finished.";
     
     public const string FileNameInputMessage = "Enter the file name:";
-    public const string FileExistMessage = "Something was found. Trying to open it.";
 
     public const string PanelMessage = 
      "Press Q to exit.\n" +

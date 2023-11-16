@@ -1,6 +1,6 @@
-using System.Text;
+using Lib;
 
-namespace Lib;
+namespace CSVLib;
 
 /// <summary>
 /// Csv methods.

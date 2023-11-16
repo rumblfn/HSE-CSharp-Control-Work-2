@@ -1,4 +1,6 @@
-namespace Lib;
+using Lib;
+
+namespace CSVLib;
 
 /// <summary>
 /// Contains methods to work with data.
@@ -10,6 +12,10 @@ public class DataProcessing
     private readonly string[] _data;
     private readonly int _columnsCount = Constants.ColumnCount;
     
+    /// <summary>
+    /// Dp Initialization.
+    /// </summary>
+    /// <param name="csvData">Array of fields with correct format.</param>
     public DataProcessing(string[] csvData)
     {
         _headersEn = csvData[.._columnsCount];
@@ -17,12 +23,21 @@ public class DataProcessing
         _data = csvData[(_columnsCount * 2)..];
     }
 
+    /// <summary>
+    /// It is used to prepare the initial data (headers).
+    /// </summary>
+    /// <returns>Fields of headers.</returns>
     private string[] GetInitialData()
     {
         return _headersEn.Concat(_headersRu).ToArray();
     }
 
-    private int GetColumnIndex(string column, bool recursive = false)
+    /// <summary>
+    /// Gets the index of the column with the desired heading.
+    /// </summary>
+    /// <param name="column">Column name.</param>
+    /// <returns>Index of column.</returns>
+    private int GetColumnIndex(string column)
     {
         int index = Array.IndexOf(_headersEn, column);
         if (index < 0)
@@ -33,6 +48,12 @@ public class DataProcessing
         return index;
     }
 
+    /// <summary>
+    /// Selection of records for the specified column and search query.
+    /// </summary>
+    /// <param name="columnName">Column for search.</param>
+    /// <param name="sub">Search query.</param>
+    /// <returns>Suitable entries, including headers.</returns>
     public string[] SamplingByColumn(string columnName, string sub)
     {
         sub = sub.ToLower();
@@ -61,6 +82,12 @@ public class DataProcessing
         return resultData;
     }
 
+    /// <summary>
+    /// Sorting record by the specified column and type.
+    /// </summary>
+    /// <param name="columnName">Column name.</param>
+    /// <param name="type">Default sorting types.</param>
+    /// <returns>Array of fields.</returns>
     public string[] SortingByColumn(string columnName, string type)
     {
         string[] resultData = GetInitialData();
@@ -96,7 +123,7 @@ public class DataProcessing
         {
             var comparer = Comparer<int>.Default;
             Array.Sort(matrix, (x, y) => 
-                comparer.Compare(int.Parse(y[index]), int.Parse(x[index])));
+                comparer.Compare(NumberMethod.Parse(y[index]), NumberMethod.Parse(x[index])));
         }
 
         for (int i = 0; i < _data.Length; i++)
@@ -105,10 +132,5 @@ public class DataProcessing
         }
 
         return resultData;
-    }
-
-    public void Write()
-    {
-        
     }
 }

@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVWorker", "CSVWorker\CSVW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib", "Lib\Lib.csproj", "{04315D12-E0EA-4262-A1B2-6D0A634DBF32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVLib", "CSVLib\CSVLib.csproj", "{242343B5-6005-4E53-89CA-E3EBA85351FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04315D12-E0EA-4262-A1B2-6D0A634DBF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{242343B5-6005-4E53-89CA-E3EBA85351FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242343B5-6005-4E53-89CA-E3EBA85351FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242343B5-6005-4E53-89CA-E3EBA85351FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242343B5-6005-4E53-89CA-E3EBA85351FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

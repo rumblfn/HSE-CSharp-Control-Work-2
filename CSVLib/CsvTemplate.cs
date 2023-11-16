@@ -1,4 +1,6 @@
-namespace Lib;
+using Lib;
+
+namespace CSVLib;
 
 public class CsvTemplate
 {
