@@ -5,13 +5,10 @@ namespace CSVLib;
 /// <summary>
 /// Csv methods.
 /// </summary>
-public abstract class CsvProcessing
+public static class CsvProcessing
 {
     // Resources.
     private static string _fPath = string.Empty;
-
-    // Setup.
-    private const char FieldsSeparator = ';';
     
     /// <summary>
     /// Checks the necessary conditions for the path.

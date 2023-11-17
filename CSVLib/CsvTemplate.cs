@@ -2,6 +2,9 @@ using Lib;
 
 namespace CSVLib;
 
+/// <summary>
+/// Class for validation csv data by template.
+/// </summary>
 public class CsvTemplate
 {
     // Each field in single string and the data must be template-based.
@@ -11,16 +14,16 @@ public class CsvTemplate
     {
         _csvData = csvData;
     }
-    
-    private readonly int _minRowsCount = Constants.HeaderRowsCount;
-    
+
+    private const int MinRowsCount = Constants.HeaderRowsCount;
+
     /// <summary>
-    /// Row count greater than or equal to <see cref="_minRowsCount"/>.
+    /// Row count greater than or equal to <see cref="MinRowsCount"/>.
     /// </summary>
     /// <exception cref="ArgumentNullException">Returns if row count is less than need.</exception>
     private void ValidateRowCount()
     {
-        if (_csvData.Length < _minRowsCount)
+        if (_csvData.Length < MinRowsCount)
         {
             throw new ArgumentNullException(Constants.FileRowsLengthErrorMessage);
         }

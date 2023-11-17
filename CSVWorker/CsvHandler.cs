@@ -13,7 +13,7 @@ internal static class CsvHandler
     public static void Run()
     {
         ConsoleMethod.NicePrint(Constants.FileNameInputMessage);
-        string userPathInput = Console.ReadLine() ?? "";
+        string userPathInput = ConsoleMethod.ReadLine();
 
         string[] lines = CsvProcessing.Read(userPathInput);
 

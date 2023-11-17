@@ -5,29 +5,29 @@ namespace CSVLib;
 /// <summary>
 /// Contains methods to work with data.
 /// </summary>
-public class DataProcessing
+public static class DataProcessing
 {
-    private readonly string[] _headersEn;
-    private readonly string[] _headersRu;
-    private readonly string[] _data;
-    private readonly int _columnsCount = Constants.ColumnCount;
+    private static string[] _headersEn = Array.Empty<string>();
+    private static string[] _headersRu = Array.Empty<string>();
+    private static string[] _data = Array.Empty<string>();
+    private static readonly int ColumnsCount = Constants.ColumnCount;
     
     /// <summary>
     /// Dp Initialization.
     /// </summary>
     /// <param name="csvData">Array of fields with correct format.</param>
-    public DataProcessing(string[] csvData)
+    private static void Init(string[] csvData)
     {
-        _headersEn = csvData[.._columnsCount];
-        _headersRu = csvData[_columnsCount..(_columnsCount * 2)];
-        _data = csvData[(_columnsCount * 2)..];
+        _headersEn = csvData[..ColumnsCount];
+        _headersRu = csvData[ColumnsCount..(ColumnsCount * 2)];
+        _data = csvData[(ColumnsCount * 2)..];
     }
 
     /// <summary>
     /// It is used to prepare the initial data (headers).
     /// </summary>
     /// <returns>Fields of headers.</returns>
-    private string[] GetInitialData()
+    private static string[] GetInitialData()
     {
         return _headersEn.Concat(_headersRu).ToArray();
     }
@@ -37,7 +37,7 @@ public class DataProcessing
     /// </summary>
     /// <param name="column">Column name.</param>
     /// <returns>Index of column.</returns>
-    private int GetColumnIndex(string column)
+    private static int GetColumnIndex(string column)
     {
         int index = Array.IndexOf(_headersEn, column);
         if (index < 0)
@@ -51,11 +51,13 @@ public class DataProcessing
     /// <summary>
     /// Selection of records for the specified column and search query.
     /// </summary>
+    /// <param name="fields">Array of fields.</param>
     /// <param name="columnName">Column for search.</param>
     /// <param name="sub">Search query.</param>
     /// <returns>Suitable entries, including headers.</returns>
-    public string[] SamplingByColumn(string columnName, string sub)
+    public static string[] SamplingByColumn(string[] fields, string columnName, string sub)
     {
+        Init(fields);
         sub = sub.ToLower();
         string[] resultData = GetInitialData();
         
@@ -69,14 +71,14 @@ public class DataProcessing
         {
             if (_data[index].ToLower().Contains(sub))
             {
-                int rowIndex = index / _columnsCount;
-                int firstRowElIdx = rowIndex * _columnsCount;
+                int rowIndex = index / ColumnsCount;
+                int firstRowElIdx = rowIndex * ColumnsCount;
                 
                 resultData = resultData
-                    .Concat(_data[firstRowElIdx..(firstRowElIdx + _columnsCount)])
+                    .Concat(_data[firstRowElIdx..(firstRowElIdx + ColumnsCount)])
                     .ToArray();
             }
-            index += _columnsCount;
+            index += ColumnsCount;
         }
 
         return resultData;
@@ -85,11 +87,13 @@ public class DataProcessing
     /// <summary>
     /// Sorting record by the specified column and type.
     /// </summary>
+    /// <param name="fields"></param>
     /// <param name="columnName">Column name.</param>
     /// <param name="type">Default sorting types.</param>
     /// <returns>Array of fields.</returns>
-    public string[] SortingByColumn(string columnName, string type)
+    public static string[] SortingByColumn(string[] fields, string columnName, string type)
     {
+        Init(fields);
         string[] resultData = GetInitialData();
         int index = GetColumnIndex(columnName);
         if (index < 0)
@@ -98,17 +102,17 @@ public class DataProcessing
         }
 
         int offsetIndex = resultData.Length;
-        int rowsCount = _data.Length / _columnsCount;
+        int rowsCount = _data.Length / ColumnsCount;
         string[] emptyData = new string[_data.Length];
         resultData = resultData.Concat(emptyData).ToArray();
         
         string[][] matrix = new string[rowsCount][];
         for (int i = 0; i < rowsCount; i++)
         {
-            string[] row = new string[_columnsCount];
-            for (int j = 0; j < _columnsCount; j++)
+            string[] row = new string[ColumnsCount];
+            for (int j = 0; j < ColumnsCount; j++)
             {
-                row[j] = _data[i * _columnsCount + j];
+                row[j] = _data[i * ColumnsCount + j];
             }
             matrix[i] = row;
         }
@@ -128,7 +132,7 @@ public class DataProcessing
 
         for (int i = 0; i < _data.Length; i++)
         {
-            resultData[i + offsetIndex] = matrix[i / _columnsCount][i % _columnsCount];
+            resultData[i + offsetIndex] = matrix[i / ColumnsCount][i % ColumnsCount];
         }
 
         return resultData;

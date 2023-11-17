@@ -13,7 +13,7 @@ internal static class Program
     private static bool HandleAgain()
     {
         ConsoleMethod.NicePrint(Constants.AgainMessage, CustomColor.SystemColor);
-        return Console.ReadKey(true).Key != Constants.ExitKeyboardKey;
+        return ConsoleMethod.ReadKey() != Constants.ExitKeyboardKey;
     }
     
     /// <summary>

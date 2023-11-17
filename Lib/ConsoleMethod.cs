@@ -9,6 +9,39 @@ public abstract class ConsoleMethod
     private static readonly string DefaultLinesSeparator = Environment.NewLine;
 
     /// <summary>
+    /// Simple readKey method to avoid errors.
+    /// </summary>
+    /// <param name="intercept">Not display input?</param>
+    /// <returns>Read key.</returns>
+    public static ConsoleKey ReadKey(bool intercept = true)
+    {
+        try
+        {
+            return Console.ReadKey(intercept).Key;
+        }
+        catch
+        {
+            return ConsoleKey.Spacebar;
+        }
+    }
+
+    /// <summary>
+    /// Simple readLine method to avoid errors.
+    /// </summary>
+    /// <returns>Read or empty string.</returns>
+    public static string ReadLine()
+    {
+        try
+        {
+            return Console.ReadLine() ?? string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
     /// Prints a message with a specified color and a specified line end.
     /// </summary>
     /// <param name="message">Message content.</param>

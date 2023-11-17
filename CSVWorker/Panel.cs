@@ -74,20 +74,20 @@ internal class DataPanel
     private void HandleSave()
     {
         ConsoleMethod.NicePrint("> Specify absolute path or default will be used:", CustomColor.Primary);
-        string nPath = Console.ReadLine() ?? "";
+        string nPath = ConsoleMethod.ReadLine();
         if (nPath.Length > 0)
         {
             CsvProcessing.Write(
                 CsvParser.FieldsToText(_data, Lib.Constants.ColumnCount, 
-                    Lib.Constants.FieldsSeparator), nPath);
+                    Lib.Constants.FieldsSeparator) + Environment.NewLine, nPath);
+            Restore("Data added to the specified path.");
         }
         else
         {
             CsvProcessing.Write(CsvParser.FieldsToLines(_data, Lib.Constants.ColumnCount, 
                 Lib.Constants.FieldsSeparator));
+            Restore("Data saved.");
         }
-
-        Restore("Data saved.");
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ internal class DataPanel
     {
         ConsoleMethod.PrintFieldsAsTable(_data, Lib.Constants.ColumnCount);
         ConsoleMethod.NicePrint("Press any key to continue.", CustomColor.ErrorColor);
-        Console.ReadKey(true);
+        ConsoleMethod.ReadKey();
         
         Restore("Data showed.");
     }
@@ -109,9 +109,8 @@ internal class DataPanel
     private void HandleSelecting(string column)
     {
         ConsoleMethod.NicePrint(Constants.SearchMessage, CustomColor.Primary);
-        string sub = Console.ReadLine() ?? "";
-        DataProcessing dp = new(_data);
-        _data = dp.SamplingByColumn(column, sub);
+        string sub = ConsoleMethod.ReadLine();
+        _data = DataProcessing.SamplingByColumn(_data, column, sub);
         int rowsCount = _data.Length / Lib.Constants.ColumnCount;
         rowsCount -= Lib.Constants.HeaderRowsCount;
         Restore($"The new selection contains {rowsCount} record(s).");
@@ -124,9 +123,7 @@ internal class DataPanel
     /// <param name="sortType">Alphabetic or Descending.</param>
     private void HandleSorting(string column, string sortType)
     {
-        DataProcessing dp = new(_data);
-        _data = dp.SortingByColumn(column, sortType);
-        
+        _data = DataProcessing.SortingByColumn(_data, column, sortType);
         Restore($"{sortType} sorting by column {column} completed.");
     }
 
@@ -229,7 +226,7 @@ internal class DataPanel
         while (!_toExit)
         {
             DrawPanel();
-            ConsoleKey pressedButtonKey = Console.ReadKey(true).Key;
+            ConsoleKey pressedButtonKey = ConsoleMethod.ReadKey();
             HandleArrowKeys(pressedButtonKey);
             HandleEnterKey(pressedButtonKey);
             HandleExitKey(pressedButtonKey);
