@@ -1,4 +1,5 @@
-﻿using Lib;
+﻿using System.Text;
+using Lib;
 namespace CSVWorker;
 
 /// <summary>
@@ -21,6 +22,7 @@ internal static class Program
     /// </summary>
     private static void Main()
     {
+        Console.InputEncoding = Encoding.Unicode;
         ConsoleMethod.NicePrint(Constants.ProgramStartedMessage, CustomColor.SystemColor);
         
         do
